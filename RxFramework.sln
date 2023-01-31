@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32728.150
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D3353046-1E8A-4B73-A32E-603250333B95}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{A261A6F8-1378-4269-BC38-4B8346948D3D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxFramework", "src\RxFramework\RxFramework.csproj", "{3142357A-8638-41E3-8205-5032641D9680}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxFramework.WPF", "src\RxFramework.WPF\RxFramework.WPF.csproj", "{EAB870AF-9B58-458C-A1EE-F372D61EAB42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxFramework.WPF.Controls", "src\RxFramework.WPF.Controls\RxFramework.WPF.Controls.csproj", "{D566A928-A537-4180-B2CC-D075B9491410}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3142357A-8638-41E3-8205-5032641D9680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3142357A-8638-41E3-8205-5032641D9680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3142357A-8638-41E3-8205-5032641D9680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3142357A-8638-41E3-8205-5032641D9680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB870AF-9B58-458C-A1EE-F372D61EAB42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB870AF-9B58-458C-A1EE-F372D61EAB42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB870AF-9B58-458C-A1EE-F372D61EAB42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB870AF-9B58-458C-A1EE-F372D61EAB42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D566A928-A537-4180-B2CC-D075B9491410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D566A928-A537-4180-B2CC-D075B9491410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D566A928-A537-4180-B2CC-D075B9491410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D566A928-A537-4180-B2CC-D075B9491410}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3142357A-8638-41E3-8205-5032641D9680} = {D3353046-1E8A-4B73-A32E-603250333B95}
+		{EAB870AF-9B58-458C-A1EE-F372D61EAB42} = {D3353046-1E8A-4B73-A32E-603250333B95}
+		{D566A928-A537-4180-B2CC-D075B9491410} = {D3353046-1E8A-4B73-A32E-603250333B95}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51C1A1B1-E22A-455B-9A25-AF50DCBD7CF6}
+	EndGlobalSection
+EndGlobal
