@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-namespace RxFramework.Hosting.Plugins;
+﻿namespace RxFramework.Hosting.Plugins;
 
 public interface IPluginManager : IDisposable
 {
@@ -11,8 +8,15 @@ public interface IPluginManager : IDisposable
     IObservable<PluginDescription> WhenPluginLoaded { get; }
 
     IEnumerable<PluginDescription> LoadedPlugins { get; }
-    IPluginInitializerCollection PluginInitializers { get; }
-    void RegisterServices(IServiceCollection services);
 
-    void InitializePlugins(IServiceProvider services);
+    IEnumerable<PluginDescription> DiscoveredPlugins { get; }
+
+    void RegisterPlugins(IServiceProvider registrationServices);
+
+    void RegisterPlugin(PluginDescription plugin, IServiceProvider registrationServices);
+
+    
+    void InitializePlugins(IServiceProvider appServices);
+
+    void InitializePlugin(PluginDescription plugin, IServiceProvider appServices);
 }

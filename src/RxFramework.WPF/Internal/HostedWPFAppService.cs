@@ -1,13 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RxFramework.Hosting.Plugins;
 using RxFramework.WPF.Hosting;
 using RxFramework.WPF.Theming;
-using RxFramework.WPF.ViewComposition;
-using System.Reactive;
 using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
@@ -26,10 +22,6 @@ internal class HostedWPFAppService : IHostedService
         _services = services;
         _appContext = context;
         _logger = logger;
-
-        var initializers = _services.GetService<IPluginInitializerCollection>();
-
-        initializers?.Add<UiPluginInitializer>();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -101,6 +93,7 @@ internal class HostedWPFAppService : IHostedService
         {
             return;
         }
+
         _logger.LogInformation("Shutting down host because the app was closed");
         _services.GetService<IHostApplicationLifetime>()?.StopApplication();
     }

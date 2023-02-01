@@ -19,6 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxFramework.WPF", "src\RxFr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxFramework.WPF.Controls", "src\RxFramework.WPF.Controls\RxFramework.WPF.Controls.csproj", "{D566A928-A537-4180-B2CC-D075B9491410}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sandbox", "sandbox", "{404A91D1-C117-45CA-B8A1-0085585453C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RxFramework.Sandbox.WPF", "sandbox\RxFramework.Sandbox.WPF\RxFramework.Sandbox.WPF.csproj", "{63E4E995-4701-4EA3-AD2E-17449BE22DA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RxFramework.Sandbox.TestPlugin", "sandbox\RxFramework.Sandbox.Plugin\RxFramework.Sandbox.TestPlugin.csproj", "{E63B07C0-EA8B-401D-B3AA-A2BDA54C7D58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +43,14 @@ Global
 		{D566A928-A537-4180-B2CC-D075B9491410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D566A928-A537-4180-B2CC-D075B9491410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D566A928-A537-4180-B2CC-D075B9491410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63E4E995-4701-4EA3-AD2E-17449BE22DA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63E4E995-4701-4EA3-AD2E-17449BE22DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63E4E995-4701-4EA3-AD2E-17449BE22DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63E4E995-4701-4EA3-AD2E-17449BE22DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E63B07C0-EA8B-401D-B3AA-A2BDA54C7D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E63B07C0-EA8B-401D-B3AA-A2BDA54C7D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E63B07C0-EA8B-401D-B3AA-A2BDA54C7D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E63B07C0-EA8B-401D-B3AA-A2BDA54C7D58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +59,8 @@ Global
 		{3142357A-8638-41E3-8205-5032641D9680} = {D3353046-1E8A-4B73-A32E-603250333B95}
 		{EAB870AF-9B58-458C-A1EE-F372D61EAB42} = {D3353046-1E8A-4B73-A32E-603250333B95}
 		{D566A928-A537-4180-B2CC-D075B9491410} = {D3353046-1E8A-4B73-A32E-603250333B95}
+		{63E4E995-4701-4EA3-AD2E-17449BE22DA8} = {404A91D1-C117-45CA-B8A1-0085585453C7}
+		{E63B07C0-EA8B-401D-B3AA-A2BDA54C7D58} = {404A91D1-C117-45CA-B8A1-0085585453C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {51C1A1B1-E22A-455B-9A25-AF50DCBD7CF6}

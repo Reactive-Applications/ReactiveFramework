@@ -11,11 +11,11 @@ public interface IHostedPluginAppBuilder : IHostBuilder
 
 	public ConfigurationManager Configuration { get; }
 
-	public IServiceCollection Services { get; }
+	public IServiceCollection AppServices { get; }
 
 	public ILoggingBuilder Logging { get; }
 
 	public IPluginCollection Plugins { get; }
 
-	public IPluginInitializerCollection PluginInitializers { get; }
+	public IServiceCollection RegistrationServices { get; }
 }

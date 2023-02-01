@@ -36,6 +36,4 @@ public class PluginAppBuilderOptions
     public IPluginCollection? PluginCollection { get; set; }
 
     public IPluginManager? PluginManager { get; set; }
-
-    public IPluginInitializerCollection? PluginInitializers { get; set; }
 }
