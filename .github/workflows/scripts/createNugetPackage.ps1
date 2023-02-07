@@ -3,13 +3,16 @@ git fetch origin main:main
 $branchName = git symbolic-ref --short HEAD
 $branchInfos = $branchName.Split('/')
 $version = $branchInfos[1].Replace('v','').Split('.')
-
-if($version.lenght -ne 3 -or  $version.lenght -ne 2){
-    Write-Error 'branch name not falid'
+Write-Output $version
+if($version.length -ne 2 -and $versuib.length -ne 3){
+    Write-Error 'branch name not valid'
+    exit -1
 }
 
-if(git rev-parse HEAD -eq 1){
+$commitId = git rev-parse HEAD
+if(git merge-base --is-ancestor $commitId HEAD){
     Write-Error 'main branch does not contain last commit'
+    exit -1
 }
 
 $commitCount = git rev-list --count --no-merges main..
