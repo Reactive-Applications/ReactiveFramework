@@ -23,4 +23,4 @@ if ($branchInfos[0] -eq "release") {
 }
 Write-Output $version
 dotnet build $solution -c Release
-dotnet pack $solution -p:Version=$version --no-build
+dotnet pack $solution -p:Version=$version --no-build -c Release
