@@ -1,10 +1,9 @@
-﻿using RxFramework.WPF.Theming;
+﻿using RxFramework.Hosting.Plugins.Attributes;
+using RxFramework.WPF.Theming;
 
 namespace RxFramework.WPF;
 public interface IThemePlugin
 {
-    void RegisterThemes(IThemeCollection themes)
-    {
-
-    }
+    [InvokedAtPluginInitialization]
+    void RegisterThemes(IThemeCollection themes);
 }

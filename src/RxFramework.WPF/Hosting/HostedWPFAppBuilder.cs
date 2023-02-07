@@ -39,26 +39,26 @@ internal class HostedWPFAppBuilder : HostedPluginAppBuilder, IHostedWPFAppBuilde
             Source = new Uri("pack://application:,,,/" + path)
         });
 
-        Services.AddSingleton(resDelegate);
+        AppServices.AddSingleton(resDelegate);
         return this;
     }
 
     public IHostedWPFAppBuilder AddResources(ResourceDictionary resources)
     {
         void resDelegate(ResourceDictionary res) => res.MergedDictionaries.Add(resources);
-        Services.AddSingleton(resDelegate);
+        AppServices.AddSingleton(resDelegate);
         return this;
     }
 
     public IHostedWPFAppBuilder UseApp<TApp>() where TApp : Application
     {
-        Services.AddSingleton<Application, TApp>();
+        AppServices.AddSingleton<Application, TApp>();
         return this;
     }
 
     public IHostedWPFAppBuilder UseApp<TApp>(Func<IServiceProvider, TApp> appFactory) where TApp : Application
     {
-        Services.AddSingleton<Application>(appFactory);
+        AppServices.AddSingleton<Application>(appFactory);
         return this;
     }
 
@@ -87,17 +87,17 @@ internal class HostedWPFAppBuilder : HostedPluginAppBuilder, IHostedWPFAppBuilde
 
     protected virtual void ConfigureDefaultServices()
     {
-        Services.TryAddSingleton(new WPFAppContext());
-        Services.TryAddSingleton<IViewCollection, ViewCollection>();
-        Services.TryAddSingleton<IViewProvider, ViewProvider>();
-        Services.TryAddSingleton<Application, RxApp>();
-        Services.TryAddSingleton<IThemeCollection, ThemeCollection>();
-        Services.TryAddSingleton<IThemeManager, ThemeManager>();
-        Services.TryAddSingleton<INavigationService, NavigationService>();
-        Services.TryAddSingleton<IViewAdapterCollection, ViewAdapterCollection>();
-        Services.TryAddSingleton<IViewCompositionService, ViewCompositionService>();
+        AppServices.TryAddSingleton(new WPFAppContext());
+        AppServices.TryAddSingleton<IViewCollection, ViewCollection>();
+        AppServices.TryAddSingleton<IViewProvider, ViewProvider>();
+        AppServices.TryAddSingleton<Application, RxApp>();
+        AppServices.TryAddSingleton<IThemeCollection, ThemeCollection>();
+        AppServices.TryAddSingleton<IThemeManager, ThemeManager>();
+        AppServices.TryAddSingleton<INavigationService, NavigationService>();
+        AppServices.TryAddSingleton<IViewAdapterCollection, ViewAdapterCollection>();
+        AppServices.TryAddSingleton<IViewCompositionService, ViewCompositionService>();
 
-        Services.AddHostedService<HostedWPFAppService>();
+        AppServices.AddHostedService<HostedWPFAppService>();
     }
 
     protected virtual void RegisterSpecialViews(IViewCollection viewCollection)

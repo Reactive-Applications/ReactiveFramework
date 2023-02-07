@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
 namespace RxFramework.Hosting.Plugins.Internal;
@@ -12,62 +10,20 @@ internal sealed class PluginManager : IPluginManager
 
     private bool _disposed;
 
-    public PluginManager(IPluginCollection plugins, IPluginInitializerCollection pluginInitializers)
+    public PluginManager(IPluginCollection plugins)
     {
         _plugins = plugins;
-        PluginInitializers = pluginInitializers;
     }
 
     public IEnumerable<PluginDescription> LoadedPlugins => _loadedPlugins;
-    public IPluginInitializerCollection PluginInitializers { get; }
+    public IEnumerable<PluginDescription> DiscoveredPlugins => _plugins;
 
     private readonly Subject<PluginDescription> _pluginLoadingSubject = new();
     public IObservable<PluginDescription> WhenPluginLoading => _pluginLoadingSubject;
 
     private readonly Subject<PluginDescription> _pluginLoadedSubject = new();
     public IObservable<PluginDescription> WhenPluginLoaded => _pluginLoadedSubject;
-
     public bool AutoInitialize { get; set; } = true;
-
-    public void InitializePlugins(IServiceProvider services)
-    {
-        PluginInitializers.CreateInitializers(services);
-        foreach (var pluginDescription in _plugins)
-        {
-            var plugin = (IPlugin)services.GetUnregisteredService(pluginDescription.PluginType);
-
-            var logger = services.GetRequiredService<ILogger<PluginManager>>();
-
-            logger.LogDebug("Loading plugin: {PluginDescription}", pluginDescription);
-            _pluginLoadingSubject.OnNext(pluginDescription);
-            var initializers = PluginInitializers.GetInitializersFor(plugin);
-            var trigger = _plugins.GetTriggerFor(pluginDescription.PluginType);
-
-            trigger
-                .Take(1)
-                .Subscribe(_ =>
-                {
-                    foreach (var initializer in initializers)
-                    {
-                        initializer.InitializePlugin(plugin, services);
-                    }
-                });
-
-            logger.LogDebug("plugin: {PluginDescription} loaded", pluginDescription);
-            _loadedPlugins.Add(pluginDescription);
-            _pluginLoadedSubject.OnNext(pluginDescription);
-        }
-        _pluginLoadingSubject.OnCompleted();
-        _pluginLoadedSubject.OnCompleted();
-    }
-
-    public void RegisterServices(IServiceCollection services)
-    {
-        foreach (var plugin in _plugins)
-        {
-            plugin.PluginType.GetMethod("RegisterServices")!.Invoke(null, new[] { services });
-        }
-    }
 
     public void Dispose()
     {
@@ -89,5 +45,33 @@ internal sealed class PluginManager : IPluginManager
         }
 
         _disposed = true;
+    }
+
+    public void RegisterPlugins(IServiceProvider registrationServices)
+    {
+        foreach (var plugin in DiscoveredPlugins)
+        {
+            plugin.RegisterPlugin(registrationServices);
+        }
+    }
+
+    public void RegisterPlugin(PluginDescription plugin, IServiceProvider registrationServices)
+    {
+        plugin.RegisterPlugin(registrationServices);
+    }
+
+    public void InitializePlugins(IServiceProvider appServices)
+    {
+        foreach (var plugin in DiscoveredPlugins)
+        {
+            InitializePlugin(plugin, appServices);
+        }
+    }
+
+    public void InitializePlugin(PluginDescription plugin, IServiceProvider appServices)
+    {
+        _pluginLoadingSubject.OnNext(plugin);
+        plugin.InitializePlugin(appServices);
+        _pluginLoadedSubject.OnNext(plugin);
     }
 }

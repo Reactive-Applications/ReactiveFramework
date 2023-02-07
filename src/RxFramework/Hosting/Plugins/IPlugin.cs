@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RxFramework.Hosting.Plugins.Attributes;
 
 namespace RxFramework.Hosting.Plugins;
+
 public interface IPlugin
 {
-    static abstract void RegisterServices(IServiceCollection services);
+    [InvokedAtPluginRegistration]
+    void RegisterServices(IServiceCollection services);
 
-    void Initialize();
+    Version GetVersion();
+
+    string GetName();
 }

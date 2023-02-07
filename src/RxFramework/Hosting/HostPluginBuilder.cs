@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RxFramework.Hosting.Plugins;
 using RxFramework.Hosting.Plugins.Internal;
 
@@ -10,7 +11,7 @@ public class HostedPluginAppBuilder : IHostedPluginAppBuilder
 {
 
     private readonly HostApplicationBuilder _hostApplicationBuilder;
-    private readonly IPluginManager _pluginManager;
+    private IPluginManager? _pluginManager;
     private readonly HostBuilderContext _hostBuilderContext;
     private readonly List<Action<object>> _configureContainerActions = new();
 
@@ -30,8 +31,7 @@ public class HostedPluginAppBuilder : IHostedPluginAppBuilder
     {
         Configuration = options.Configuration ?? new ConfigurationManager();
         Plugins = options.PluginCollection ?? new PluginCollection();
-        PluginInitializers = options.PluginInitializers ?? new PluginInitializerCollection();
-        _pluginManager = options.PluginManager ?? new PluginManager(Plugins, PluginInitializers);
+        _pluginManager = options.PluginManager;
         _hostApplicationBuilder = new HostApplicationBuilder(new HostApplicationBuilderSettings
         {
             Args = options.Args,
@@ -50,19 +50,30 @@ public class HostedPluginAppBuilder : IHostedPluginAppBuilder
 
     public IHostEnvironment Environment => _hostApplicationBuilder.Environment;
     public ConfigurationManager Configuration { get; }
-    public IServiceCollection Services => _hostApplicationBuilder.Services;
+    public IServiceCollection AppServices => _hostApplicationBuilder.Services;
     public ILoggingBuilder Logging => _hostApplicationBuilder.Logging;
     public IPluginCollection Plugins { get; }
-    public IPluginInitializerCollection PluginInitializers { get; }
+    public IServiceCollection RegistrationServices { get; } = new ServiceCollection();
 
     public IDictionary<object, object> Properties { get; } = new Dictionary<object, object>();
 
     public virtual IHost Build()
     {
-        Services.AddSingleton(Plugins);
-        Services.AddSingleton(_pluginManager);
-        Services.AddSingleton(PluginInitializers);
-        _pluginManager.RegisterServices(Services);
+        RegistrationServices.AddSingleton<IConfiguration>(Configuration);
+        
+        RegistrationServices.AddSingleton(AppServices);
+        RegistrationServices.AddSingleton(Logging);
+        RegistrationServices.AddSingleton(Environment);
+
+        _pluginManager ??= new PluginManager(Plugins);
+        var registrationServices = RegistrationServices.BuildServiceProvider();
+        
+        AppServices.AddSingleton(Plugins);
+        AppServices.AddSingleton(_pluginManager);
+        AppServices.AddSingleton(RegistrationServices);
+
+        
+        _pluginManager.RegisterPlugins(registrationServices);
         return _hostApplicationBuilder.Build();
     }
 
@@ -86,7 +97,7 @@ public class HostedPluginAppBuilder : IHostedPluginAppBuilder
 
     public virtual IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
     {
-        configureDelegate(_hostBuilderContext, Services);
+        configureDelegate(_hostBuilderContext, AppServices);
         return this;
     }
 
