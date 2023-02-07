@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using ReactiveFramework.WPF;
 using ReactiveFramework.WPF.Internal;
-using ReactiveFramework.WPF.Theming;
 using ReactiveFramework.WPF.ViewComposition;
 using ReactiveFramework.Hosting;
 using System.Windows;
@@ -92,8 +90,6 @@ internal class HostedWPFAppBuilder : HostedPluginAppBuilder, IHostedWPFAppBuilde
         AppServices.TryAddSingleton<IViewCollection, ViewCollection>();
         AppServices.TryAddSingleton<IViewProvider, ViewProvider>();
         AppServices.TryAddSingleton<Application, RxApp>();
-        AppServices.TryAddSingleton<IThemeCollection, ThemeCollection>();
-        AppServices.TryAddSingleton<IThemeManager, ThemeManager>();
         AppServices.TryAddSingleton<INavigationService, NavigationService>();
         AppServices.TryAddSingleton<IViewAdapterCollection, ViewAdapterCollection>();
         AppServices.TryAddSingleton<IViewCompositionService, ViewCompositionService>();

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ReactiveFramework.WPF;
 using ReactiveFramework.WPF.Hosting;
-using ReactiveFramework.WPF.Theming;
 using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Windows;
@@ -74,8 +72,6 @@ internal class HostedWPFAppService : IHostedService
         {
             action(app.Resources);
         }
-
-        _services.GetRequiredService<IThemeManager>().Initialize();
         _appContext.IsRunning = true;
 
         app.Run();
