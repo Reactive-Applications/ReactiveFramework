@@ -3,9 +3,14 @@ git fetch origin main:main
 $branchName = git symbolic-ref --short HEAD
 $branchInfos = $branchName.Split('/')
 $version = $branchInfos[1].Replace('v','').Split('.')
-Write-Output $version
-if($version.length -ne 2 -and $versuib.length -ne 3){
-    Write-Error 'branch name not valid'
+if($version.length -ne 2 -and $branchInfos[0] -eq "release"){
+    Write-Error 'release version in branch name is not valid'
+    exit -1
+}elseif ($version.length -ne 3 -and $branchInfos[0] -eq "preRelease") {
+    Write-Error 'preRelease version in branch name is not valid'
+    exit -1
+}elseif($branchInfos[0] -ne "release" -and $branchInfos[0] -ne "preRelease") {
+    Write-Error 'branch is not a release branch'
     exit -1
 }
 
@@ -19,7 +24,7 @@ $commitCount = git rev-list --count --no-merges main..
 if ($branchInfos[0] -eq "release") {
     $version = "$($version[0]).$($version[1]).$($commitCount)"
 }else {
-    $version = "$($version[0]).$($version[1]).$($version[1])-alpha.$($commitCount)"
+    $version = "$($version[0]).$($version[1]).$($version[2])-alpha.$($commitCount)"
 }
 Write-Output $version
 dotnet build $solution -c Release
