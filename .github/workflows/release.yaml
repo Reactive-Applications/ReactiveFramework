@@ -2,7 +2,8 @@ name: Create release
 on: 
   push:
     branches:
-      - release/*
+      - release/v*.*
+      - preRelease/v*.*.*
 
 jobs:
   createRelease:
