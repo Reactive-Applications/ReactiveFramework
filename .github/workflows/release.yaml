@@ -23,4 +23,4 @@ jobs:
       run: .\.github\workflows\scripts\createNugetPackage.ps1 .
 
     - name: publish nuget
-      run: dotnet nuget push "**/*.nupkg" -s https://nuget.pkg.github.com/Reactive-Applications/index.json -k ${GITHUB_TOKEN}
+      run: dotnet nuget push "**/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }}
