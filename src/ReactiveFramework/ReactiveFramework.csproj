@@ -4,9 +4,14 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="./../../README.md" Pack="true" PackagePath="\"/>
+		<None Include="./../../LICENSE" Pack="true" PackagePath="\"/>
+		
 		<PackageReference Include="DynamicData" Version="7.12.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-rc.2.22472.3" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
