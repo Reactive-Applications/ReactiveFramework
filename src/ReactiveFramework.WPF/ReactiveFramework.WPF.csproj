@@ -5,6 +5,8 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<ImplicitUsings>true</ImplicitUsings>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,6 +15,9 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+
+		<None Include="./../../README.md" Pack="true" PackagePath="\"/>
+		<None Include="./../../LICENSE" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 
 	<ItemGroup>
