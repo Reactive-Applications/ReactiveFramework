@@ -12,7 +12,7 @@
     mc:Ignorable="d">
     <StackPanel>
         <TextBlock Text="Message:" />
-        <TextBox Text="{rx:Bind Message}" 
+        <TextBox Text="{rx:Bind Message, UpdateSourceTrigger=PropertyChanged}" 
                  Margin="0,0,0,15"/>
         <Button Content="Navigate To View B" Command="{rx:Bind NavigateToViewBCommand}"/>
     </StackPanel>

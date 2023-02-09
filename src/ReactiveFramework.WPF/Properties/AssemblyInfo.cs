@@ -20,9 +20,7 @@ using System.Windows.Markup;
 
 [assembly: Guid("2f17aee6-b3e5-4597-9ae9-b711d5c41e35")]
 
-[assembly: XmlnsDefinition(@"https://reactivesolution.de/RxFramework/WPF", "RxFramework.WPF.Converters")]
-[assembly: XmlnsDefinition(@"https://reactivesolution.de/RxFramework/WPF", "RxFramework.WPF.MarkupExtensions")]
-[assembly: XmlnsDefinition(@"https://reactivesolution.de/RxFramework/WPF", "RxFramework.WPF")]
-[assembly: XmlnsDefinition(@"https://reactivesolution.de/RxFramework/WPF", "RxFramework.WPF.Theming")]
-[assembly: XmlnsDefinition(@"https://reactivesolution.de/RxFramework/WPF", "RxFramework.WPF.Controls")]
-//[assembly: XmlnsDefinition("https://reactivesolution.de/RxFramework/WPF", "RxApplication.WPF.Behaviors")]
+[assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.Converters")]
+[assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.MarkupExtensions")]
+[assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF")]
+[assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.Controls")]

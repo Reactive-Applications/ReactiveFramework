@@ -1,6 +1,7 @@
 ﻿using ReactiveFramework;
 using ReactiveFramework.Commands;
 using ReactiveFramework.ReactiveProperty;
+using System.Reactive.Linq;
 
 namespace WpfPlugin.ViewModels;
 public class ViewAViewModel : NavigableViewModel
@@ -11,7 +12,11 @@ public class ViewAViewModel : NavigableViewModel
 
     public ViewAViewModel(INavigationService navigationService)
     {
-        NavigateToViewBCommand = RxCommand.Create(() => navigationService.NavigateTo<ViewBViewModel, string>("PageViews", Message));
+        // Executes navigation to View B. 
+        // Can only be executed if Message is not empty.
+        NavigateToViewBCommand = RxCommand.Create(
+            () => navigationService.NavigateTo<ViewBViewModel, string>("PageViews", Message),
+            Message.Select(s => !string.IsNullOrWhiteSpace(s)));
     }
 
     public override void OnNavigatedFrom()

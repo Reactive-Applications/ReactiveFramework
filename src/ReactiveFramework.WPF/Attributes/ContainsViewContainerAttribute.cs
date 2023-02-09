@@ -1,4 +1,6 @@
 ﻿namespace ReactiveFramework.WPF.Attributes;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public class ContainsViewContainerAttribute : Attribute
 {
 

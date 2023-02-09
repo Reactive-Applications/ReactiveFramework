@@ -17,7 +17,8 @@ internal class ViewCompositionService : IViewCompositionService
 
     public void InsertView<TViewModel>(object containerKey) where TViewModel : IViewModel
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey).Any(v => v.Properties[ViewDescriptorKeys.ContainsViewContainerKey].Equals(containerKey)))
+        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
+            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
