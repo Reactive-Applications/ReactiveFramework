@@ -23,4 +23,4 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.Converters")]
 [assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.MarkupExtensions")]
 [assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF")]
-[assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.Controls")]
+[assembly: XmlnsDefinition(@"https://reactivapplications.de/RxFramework/WPF", "ReactiveFramework.WPF.Behaviors")]
