@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\ReactiveFramework.WPF\ReactiveFramework.WPF.csproj" />
+    <ProjectReference Include="..\WpfPlugin\WpfPlugin.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -117,7 +117,8 @@ internal class NavigationService : INavigationService
 
     public void NavigateTo<TViewModel>(object containerKey) where TViewModel : INavigableViewModel
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey).Any(v => v.Properties[ViewDescriptorKeys.ContainsViewContainerKey].Equals(containerKey)))
+        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
+            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -136,7 +137,8 @@ internal class NavigationService : INavigationService
     public void NavigateTo<TViewModel, TParameter>(object containerKey, TParameter parameter) where TViewModel : INavigableViewModel<TParameter>
     {
 
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey).Any(v => v.Properties[ViewDescriptorKeys.ContainsViewContainerKey].Equals(containerKey)))
+        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
+            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }

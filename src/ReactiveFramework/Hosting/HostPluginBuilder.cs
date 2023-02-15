@@ -60,7 +60,6 @@ public class HostedPluginAppBuilder : IHostedPluginAppBuilder
     public virtual IHost Build()
     {
         RegistrationServices.AddSingleton<IConfiguration>(Configuration);
-
         RegistrationServices.AddSingleton(AppServices);
         RegistrationServices.AddSingleton(Logging);
         RegistrationServices.AddSingleton(Environment);

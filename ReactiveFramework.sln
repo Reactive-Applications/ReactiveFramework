@@ -17,6 +17,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveFramework", "src\Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveFramework.WPF", "src\ReactiveFramework.WPF\ReactiveFramework.WPF.csproj", "{7CFDF549-AD72-4DD8-A800-48DA27E25E9F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{8C83447D-46C2-4510-BDC0-C57D60E72D8C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WpfPluginApp", "WpfPluginApp", "{B4B0A4E7-3CB9-4A48-9F12-36D0149365D8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfPluginApp", "Examples\WpfPluginApp\WpfPluginApp\WpfPluginApp.csproj", "{8DCE11B3-6104-40A9-85AF-73A2C4D214E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPlugin", "Examples\WpfPluginApp\WpfPlugin\WpfPlugin.csproj", "{66E98156-4FD1-4B73-BD10-A8CF3647D24A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +39,14 @@ Global
 		{7CFDF549-AD72-4DD8-A800-48DA27E25E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CFDF549-AD72-4DD8-A800-48DA27E25E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CFDF549-AD72-4DD8-A800-48DA27E25E9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DCE11B3-6104-40A9-85AF-73A2C4D214E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DCE11B3-6104-40A9-85AF-73A2C4D214E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DCE11B3-6104-40A9-85AF-73A2C4D214E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DCE11B3-6104-40A9-85AF-73A2C4D214E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E98156-4FD1-4B73-BD10-A8CF3647D24A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E98156-4FD1-4B73-BD10-A8CF3647D24A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E98156-4FD1-4B73-BD10-A8CF3647D24A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E98156-4FD1-4B73-BD10-A8CF3647D24A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +54,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D5CF2C21-043F-4488-9EEE-07AC9EC16DDA} = {D3353046-1E8A-4B73-A32E-603250333B95}
 		{7CFDF549-AD72-4DD8-A800-48DA27E25E9F} = {D3353046-1E8A-4B73-A32E-603250333B95}
+		{B4B0A4E7-3CB9-4A48-9F12-36D0149365D8} = {8C83447D-46C2-4510-BDC0-C57D60E72D8C}
+		{8DCE11B3-6104-40A9-85AF-73A2C4D214E4} = {B4B0A4E7-3CB9-4A48-9F12-36D0149365D8}
+		{66E98156-4FD1-4B73-BD10-A8CF3647D24A} = {B4B0A4E7-3CB9-4A48-9F12-36D0149365D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {51C1A1B1-E22A-455B-9A25-AF50DCBD7CF6}

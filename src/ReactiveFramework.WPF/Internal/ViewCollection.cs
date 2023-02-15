@@ -59,11 +59,19 @@ internal class ViewCollection : IViewCollection
             AddLookupKey(descriptor, ViewDescriptorKeys.IsSplashScreenKey);
         }
 
-        var navFrameAttribute = descriptor.ViewType.GetCustomAttribute<ContainsViewContainerAttribute>();
-        if (navFrameAttribute != null)
+        var navFrameAttributes = descriptor.ViewType.GetCustomAttributes<ContainsViewContainerAttribute>();
+        foreach (var navFrameAttribute in navFrameAttributes)
         {
             AddLookupKey(descriptor, ViewDescriptorKeys.ContainsViewContainerKey);
-            descriptor.Properties[ViewDescriptorKeys.ContainsViewContainerKey] = navFrameAttribute.Key;
+
+            if(!descriptor.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys))
+            {
+                navKeys = new HashSet<object>();
+                descriptor.Properties[ViewDescriptorKeys.ContainsViewContainerKey] = navKeys;
+            }
+
+            var navKeysHasSet = (HashSet<object>)navKeys;
+            navKeysHasSet.Add(navFrameAttribute.Key);
         }
     }
 
