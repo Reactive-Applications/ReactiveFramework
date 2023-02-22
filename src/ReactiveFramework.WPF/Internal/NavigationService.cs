@@ -1,4 +1,4 @@
-﻿using ReactiveFramework.WPF.Controls;
+﻿using ReactiveFramework.WPF.Behaviors;
 using ReactiveFramework.WPF.ViewComposition;
 using System.Reactive.Linq;
 using System.Windows;
