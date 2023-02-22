@@ -13,7 +13,7 @@
 		<None Include="./../../LICENSE" Pack="true" PackagePath="\"/>
 		
 		<PackageReference Include="DynamicData" Version="7.12.11" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
 	</ItemGroup>
 
