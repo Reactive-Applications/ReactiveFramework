@@ -19,7 +19,7 @@ public class WpfPlugin : UiPlugin
     //}
 
     // All Services that are available at runtime can be injected as Parameter
-    [InvokedAtPluginInitialization]
+    [InvokedAtAppStart]
     public void InjectViews(IViewCompositionService viewCompositionService)
     {
         viewCompositionService.InsertView<ViewAViewModel>("PageViews");

@@ -6,6 +6,6 @@ namespace ReactiveFramework.WPF;
 
 internal interface IUiPlugin : IPlugin
 {
-    [InvokedAtPluginInitialization]
+    [InvokedAtAppStart]
     void InitializeUIPlugin(IViewCollection viewCollection);
 }

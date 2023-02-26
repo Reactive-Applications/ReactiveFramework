@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 namespace ReactiveFramework.WPF.Hosting;
 public static class HostedWPFApp
 {
-    public static IHostedWPFAppBuilder CreateDefaultBuilder()
+    public static IWPFAppBuilder CreateDefaultBuilder()
     {
-        return new HostedWPFAppBuilder();
+        return new WPFAppBuilder();
     }
 
-    public static IHostedWPFAppBuilder CreateDefaultBuilder(string[] args)
+    public static IWPFAppBuilder CreateDefaultBuilder(string[] args)
     {
-        return new HostedWPFAppBuilder(args);
+        return new WPFAppBuilder(args);
     }
 
-    public static IHostedWPFAppBuilder CreateDefaultBuilder(WPFAppBuilderOptions options)
+    public static IWPFAppBuilder CreateDefaultBuilder(WPFAppOptions options)
     {
-        return new HostedWPFAppBuilder(options);
+        return new WPFAppBuilder(options);
     }
 }

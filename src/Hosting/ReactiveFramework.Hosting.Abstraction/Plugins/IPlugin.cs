@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReactiveFramework.Hosting.Plugins.Attributes;
 
-namespace ReactiveFramework.Hosting.Plugins;
+namespace ReactiveFramework.Hosting.Abstraction.Plugins;
 
 public interface IPlugin
 {
-    [InvokedAtPluginRegistration]
+    [InvokedAtAppInitialization]
     void RegisterServices(IServiceCollection services);
 
     Version GetVersion();

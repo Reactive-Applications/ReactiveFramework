@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using ReactiveFramework.Hosting.Abstraction.Plugins;
+using ReactiveFramework.Hosting.Plugins;
+using System.Collections;
 using System.Reactive.Linq;
 using System.Reflection;
 
-namespace ReactiveFramework.Hosting.Plugins.Internal;
+namespace ReactiveFramework.Hosting.Internal;
 internal sealed class PluginCollection : IPluginCollection
 {
     private readonly HashSet<PluginDescription> _plugins = new();
+
+    public bool IsReadOnly { get; }
 
     public void Add<T>() where T : IPlugin, new()
     {
@@ -39,22 +43,13 @@ internal sealed class PluginCollection : IPluginCollection
 
         foreach (var innerDirectory in innerDirectories)
         {
-            var dirname = Path.GetFileName(Path.GetDirectoryName(innerDirectory));
-            var file = Directory.GetFiles(innerDirectory, $"*{dirname}*.dll").First();
-
-            if (file == null)
-            {
-                throw new FileNotFoundException($"no dll for '{dirname}' found");
-            }
-
+            var dirName = Path.GetFileName(Path.GetDirectoryName(innerDirectory));
+            var file = Directory.GetFiles(innerDirectory, $"*{dirName}*.dll").First()
+                ?? throw new FileNotFoundException($"no dll for '{dirName}' found");
+            
             var ass = Assembly.LoadFrom(file);
-            var plugin = ass.GetTypes().Where(t => t.IsAssignableTo(typeof(IPlugin))).First();
-
-            if (plugin == null)
-            {
-                throw new Exception($"{file}' did not contain any Plugin");
-            }
-
+            var plugin = ass.GetTypes().Where(t => t.IsAssignableTo(typeof(IPlugin))).First()
+                ?? throw new Exception($"{file}' did not contain any Plugin");
             Add(plugin);
         }
     }
@@ -62,6 +57,11 @@ internal sealed class PluginCollection : IPluginCollection
     public IEnumerator<PluginDescription> GetEnumerator()
     {
         return _plugins.GetEnumerator();
+    }
+
+    public void MakeReadOnly()
+    {
+        throw new NotImplementedException();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

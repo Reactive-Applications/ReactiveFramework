@@ -2,7 +2,7 @@
 
 namespace ReactiveFramework.WPF.Hosting;
 
-public class WPFAppBuilderOptions : PluginAppBuilderOptions
+public class WPFAppOptions : PluginAppBuilderOptions
 {
     public Type? ShellType { get; set; }
 }
