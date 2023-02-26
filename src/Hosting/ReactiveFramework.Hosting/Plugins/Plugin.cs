@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ReactiveFramework.Hosting.Plugins.Attributes;
+using ReactiveFramework.Hosting.Abstraction.Plugins;
 
 namespace ReactiveFramework.Hosting.Plugins;
 public abstract class Plugin : IPlugin

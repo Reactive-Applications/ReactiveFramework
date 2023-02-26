@@ -3,62 +3,74 @@ using Microsoft.Extensions.Hosting;
 using ReactiveFramework.Hosting.Abstraction;
 using ReactiveFramework.Hosting.Abstraction.Plugins;
 using ReactiveFramework.Hosting.Plugins;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ReactiveFramework.Hosting;
 public class PluginApplication : IPluginApplication
 {
-    private readonly IHostBuilder _hostBuilder;
+    private readonly PluginHostBuilderContext _context;
     private readonly IServiceProvider _initializationServices;
+    private bool _initializing;
 
-    private IHost? _host;
-
-    [MemberNotNullWhen(true, nameof(_host))]
+    [MemberNotNullWhen(true, nameof(Services))]
     public bool IsInitialized { get; private set; }
 
-    public IServiceProvider Services { get; private set; }
+    public IServiceProvider? Services { get; private set; }
 
     public IServiceCollection RuntimeServices { get; }
 
     public IPluginCollection Plugins { get; }
 
-    internal PluginApplication(IHostBuilder hostBuilder, IServiceProvider initializationServices)
+    internal PluginApplication(PluginHostBuilderContext context, IServiceProvider initializationServices)
     {
-        RuntimeServices = new ServiceCollection();
         _initializationServices = Services = initializationServices;
-        _hostBuilder = hostBuilder;
+        _context = context;
         Plugins = _initializationServices.GetRequiredService<IPluginCollection>();
+        RuntimeServices = _initializationServices.GetRequiredService<IServiceCollection>();
     }
 
     public void Dispose()
     {
     }
 
+    // TODO: Build Runtime Services with container builder action
+    // TODO: Configure Logging (copy logging options from appBuilder if option is set)
+    // TODO: Register RuntimeServices from configure services actions
     public virtual async Task Initialize()
     {
-        Plugins.MakeReadOnly();
+        if(_initializing)
+        {
+            return;
+        }
+
+        _initializing = true;
 
         var pluginManager = _initializationServices.GetRequiredService<IPluginManager>();
+        
+        Plugins.MakeReadOnly();
 
-        await pluginManager.RegisterPluginsAsync(_initializationServices).ConfigureAwait(false);
+        await pluginManager.InitializePluginsAsync(_initializationServices).ConfigureAwait(false);
 
-        _hostBuilder.ConfigureServices(services =>
-        {
-            foreach (var service in RuntimeServices)
-            {
-                services.Add(service);
-            }
-        });
-
-        _host = _hostBuilder.Build();
-        Services = _host.Services;
-
+        var buildServices = _initializationServices.GetRequiredService<Func<IServiceCollection, IServiceProvider>>();
+        
+        Services = buildServices(RuntimeServices);
         IsInitialized = true;
     }
 
-    public virtual Task StartAsync(CancellationToken cancellationToken = default)
+    public virtual async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        return !IsInitialized ? throw new InvalidOperationException("Application not Initialized") : _host.StartAsync(cancellationToken);
+        if(_context.AutoInitialize)
+        {
+            await Initialize().ConfigureAwait(false);
+        }
+
+        if (!IsInitialized)
+        {
+            throw new InvalidOperationException("call Initialize first");
+        }
+
+
     }
 
     public virtual Task StopAsync(CancellationToken cancellationToken = default)
@@ -68,6 +80,14 @@ public class PluginApplication : IPluginApplication
             return Task.CompletedTask;
         }
 
-        return _host.StopAsync(cancellationToken);
+        return Task.CompletedTask;
+    }
+
+    public static IPluginApplicationBuilder CreateBuilder(string[] args)
+    {
+        return new PluginApplicationBuilder(new PluginApplicationBuilderSettings()
+        {
+            Args = args
+        });
     }
 }

@@ -1,13 +1,8 @@
 ﻿using Microsoft.Extensions.Hosting;
-using ReactiveFramework.WPF.Hosting;
+using ReactiveFramework.Hosting;
 
-var builder = HostedWPFApp.CreateDefaultBuilder(args);
+var builder = PluginApplication.CreateBuilder(args);
 
-builder.Plugins.Add<WpfPlugin.WpfPlugin>();
+var app = builder.Build();
 
-// To add some xaml resources:
-//builder.AddResources("path to resource");
-
-var host = builder.Build();
-
-await host.RunAsync();
+await app.StartAsync();

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ReactiveFramework.Hosting.Plugins.Attributes;
+using ReactiveFramework.Hosting.Abstraction.Attributes;
 
 namespace ReactiveFramework.Hosting.Abstraction.Plugins;
 

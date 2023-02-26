@@ -3,14 +3,11 @@ using Microsoft.Extensions.Hosting;
 using ReactiveFramework.Hosting.Abstraction;
 
 namespace ReactiveFramework.Hosting.Internal;
-internal class PluginHostEnvironment : IPluginHostEnvironment
+public class PluginHostEnvironment : IPluginHostEnvironment
 {
-    public PluginHostEnvironment(IHostEnvironment hostEnvironment)
+    public PluginHostEnvironment()
     {
-        EnvironmentName = hostEnvironment.EnvironmentName;
-        ApplicationName = hostEnvironment.ApplicationName;
-        ContentRootPath = hostEnvironment.ContentRootPath;
-        ContentRootFileProvider = hostEnvironment.ContentRootFileProvider;
+        
     }
 
     public string EnvironmentName { get; set; }

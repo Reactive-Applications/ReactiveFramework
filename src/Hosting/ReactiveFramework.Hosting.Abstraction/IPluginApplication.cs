@@ -9,6 +9,8 @@ public interface IPluginApplication : IHost
 
     IServiceCollection RuntimeServices { get; }
 
+    new IServiceProvider? Services { get; }
+
     IPluginCollection Plugins { get; }
 
     Task Initialize();
