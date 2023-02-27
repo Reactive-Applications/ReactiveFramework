@@ -6,13 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
 using ReactiveFramework.Hosting.Abstraction;
 using ReactiveFramework.Hosting.Internal;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReactiveFramework.Hosting;
 public static class HostBuilderExtensions
@@ -104,6 +98,8 @@ public static class HostBuilderExtensions
 
     internal static void AddDefaultLogging(PluginHostBuilderContext context, ILoggingBuilder logging)
     {
+
+        logging.Services.AddLogging();
         bool isWindows = OperatingSystem.IsWindows();
         
         if(isWindows)

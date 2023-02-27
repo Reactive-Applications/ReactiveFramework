@@ -7,23 +7,24 @@ using Microsoft.Extensions.Logging;
 using ReactiveFramework.Hosting.Abstraction;
 using ReactiveFramework.Hosting.Abstraction.Plugins;
 using ReactiveFramework.Hosting.Internal;
-using ReactiveFramework.Hosting.Plugins;
 using System.Diagnostics;
-using System.Runtime.Remoting;
 
 namespace ReactiveFramework.Hosting;
 public class PluginApplicationBuilder : IPluginApplicationBuilder
 {
     private readonly PluginHostBuilderContext _context;
     private readonly ServiceCollection _serviceCollection;
-    
-    private Func<IServiceCollection,IServiceProvider> _createServiceProvider;
+    private readonly ServiceCollection _runTimeServices;
+    private readonly PluginApplicationBuilderSettings _settings;
+
+    private Func<IServiceCollection, IServiceProvider> _createServiceProvider;
     private Action<object> _configureContainer = _ => { };
-    
+
     private bool _hostBuild;
 
     public IPluginHostEnvironment Environment { get; }
     public IServiceCollection InitializationServices => _serviceCollection;
+    public IServiceCollection RunTimeServices => _runTimeServices;
     public ConfigurationManager Configuration { get; }
     public ILoggingBuilder Logging { get; }
 
@@ -33,6 +34,8 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
     {
         Configuration = settings.Configuration ??= new();
         _serviceCollection = new ServiceCollection();
+        _settings = settings;
+        _runTimeServices = new ServiceCollection();
         Properties = new Dictionary<object, object>();
 
         if (!settings.DisableDefaults)
@@ -78,7 +81,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
             AutoInitialize = settings.AutoInitialize,
         };
 
-        ConfigureInitializationServices();
+        ConfigureServices();
 
         ServiceProviderOptions? providerOptions = null;
 
@@ -97,18 +100,29 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
         };
     }
 
-    protected virtual void ConfigureInitializationServices()
+    protected virtual void ConfigureServices()
     {
         InitializationServices.AddSingleton<IHostEnvironment>(Environment);
         InitializationServices.AddSingleton<IHostApplicationLifetime, ApplicationLifetime>();
+        InitializationServices.AddSingleton<IHostLifetime, ConsoleLifetime>();
     }
-    protected virtual void RegisterDefaultInitializationServices() 
+
+    protected virtual void RegisterDefaultInitializationServices()
     {
         InitializationServices.TryAddSingleton(Configuration);
         InitializationServices.TryAddSingleton<IServiceCollection, ServiceCollection>();
         InitializationServices.TryAddSingleton<IPluginManager, PluginManager>();
         InitializationServices.TryAddSingleton<IPluginCollection, PluginCollection>();
-        InitializationServices.TryAddSingleton<ILoggingBuilder>(provider => new LoggingBuilder(provider.GetRequiredService<IServiceCollection>()));
+        InitializationServices.TryAddSingleton<ILoggingBuilder>(provider =>
+        {
+            var services = provider.GetRequiredService<IServiceCollection>();
+            if (!_settings.DisableDefaults)
+            {
+                services.Add(Logging.Services);
+            }
+
+            return new LoggingBuilder(services);
+        });
     }
 
     public virtual IPluginApplication Build()
@@ -120,19 +134,20 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
         _hostBuild = true;
 
-        
-
         foreach (var loggingService in Logging.Services)
         {
             InitializationServices.Add(loggingService);
         }
-        
 
         InitializationServices.AddSingleton(_configureContainer);
         InitializationServices.AddSingleton(_createServiceProvider);
 
         var services = _createServiceProvider(InitializationServices);
         _serviceCollection.MakeReadOnly();
+
+        var runtimeServices = services.GetRequiredService<IServiceCollection>();
+
+        runtimeServices.Add(RunTimeServices);
 
         return new PluginApplication(_context, services);
     }
@@ -162,7 +177,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
     public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
     {
-        InitializationServices.AddSingleton(configureDelegate);
+        configureDelegate(_context, RunTimeServices);
         return this;
     }
 
@@ -180,7 +195,6 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
     public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory) where TContainerBuilder : notnull
         => UseServiceProviderFactory(factory(_context));
-    
 
     public IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
     {
@@ -208,7 +222,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
     private sealed class ServiceProviderFactoryAdapter<TContainerBuilder> : IServiceProviderFactory<object> where TContainerBuilder : notnull
     {
-        private  IServiceProviderFactory<TContainerBuilder>? _serviceProviderFactory;
+        private IServiceProviderFactory<TContainerBuilder>? _serviceProviderFactory;
 
         private readonly Func<HostBuilderContext>? _contextResolver;
         private Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>>? _factoryResolver;

@@ -9,9 +9,9 @@ public interface IPluginManager : IDisposable
 
     IEnumerable<PluginDescription> DiscoveredPlugins { get; }
 
-    Task InitializePluginAsync(PluginDescription plugin, IServiceProvider initializationServices);
+    Task InitializePluginAsync(PluginDescription plugin, IServiceProvider initializationServices, CancellationToken cancellationToken);
     
-    Task InitializePluginsAsync(IServiceProvider initializationServices);
+    Task InitializePluginsAsync(IServiceProvider initializationServices, CancellationToken cancellationToken);
 
     Task StartPluginAsync(PluginDescription plugin, IServiceProvider appServices);
 

@@ -7,11 +7,9 @@ public interface IPluginApplication : IHost
 {
     bool IsInitialized { get; }
 
-    IServiceCollection RuntimeServices { get; }
-
-    new IServiceProvider? Services { get; }
+    new IServiceProvider Services { get; }
 
     IPluginCollection Plugins { get; }
 
-    Task Initialize();
+    Task Initialize(CancellationToken cancellationToken = default);
 }

@@ -6,11 +6,13 @@ using Microsoft.Extensions.Logging;
 namespace ReactiveFramework.Hosting.Abstraction;
 public interface IPluginApplicationBuilder : IHostBuilder
 {
-    IPluginApplication Build();
+    new IPluginApplication Build();
 
     IPluginHostEnvironment Environment { get; }
 
     IServiceCollection InitializationServices { get; }
+
+    IServiceCollection RunTimeServices { get; }
 
     ConfigurationManager Configuration { get; }
 

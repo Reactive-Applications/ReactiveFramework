@@ -19,16 +19,4 @@ public static class ServiceProviderExtensions
     {
         return ActivatorUtilities.CreateInstance<T>(serviceProvider, parameters);
     }
-
-    public static IEnumerable<object> GetServices(this IServiceProvider serviceProvider, IEnumerable<Type> types)
-    {
-        foreach (var type in types)
-        {
-            var service = serviceProvider.GetService(type);
-            if (service != null)
-            {
-                yield return service;
-            }
-        }
-    }
 }

@@ -55,21 +55,20 @@ internal sealed class PluginManager : IPluginManager
         foreach (var startMethod in plugin.StartMethods)
         {
             var parameters = appServices.GetServices(startMethod.GetParameters()
-                .Select(p => p.ParameterType))
-                .ToArray();
+               .Select(p => p.ParameterType).Where(t => !t.IsAssignableTo(typeof(CancellationToken))))
+               .ToArray();
 
             if (startMethod.ReturnType.IsAssignableTo(typeof(Task)))
             {
-                await ((Task)startMethod.Invoke(plugin, parameters)!).ConfigureAwait(false);
+                await ((Task)startMethod.Invoke(plugin.Instance, parameters)!).ConfigureAwait(false);
             }
             else
             {
-                startMethod.Invoke(plugin, parameters);
+                startMethod.Invoke(plugin.Instance, parameters);
             }
         }
 
-        _pluginLoadedSubject.OnNext(plugin);
-        _loadedPlugins.Add(plugin);
+        _pluginLoadedSubject.OnNext(plugin);        
     }
 
     public async Task StartPluginsAsync(IServiceProvider appServices)
@@ -79,30 +78,34 @@ internal sealed class PluginManager : IPluginManager
             await StartPluginAsync(plugin, appServices).ConfigureAwait(false);
         }
     }
-    public async Task InitializePluginAsync(PluginDescription plugin, IServiceProvider registrationServices)
+    public async Task InitializePluginAsync(PluginDescription pluginDescription, IServiceProvider initializationServices, CancellationToken cancellationToken = default)
     {
-        foreach (var startMethod in plugin.InitializeMethods)
+        pluginDescription.InitializeDescriptor();
+
+        foreach (var startMethod in pluginDescription.InitializeMethods)
         {
-            var parameters = registrationServices.GetServices(startMethod.GetParameters()
-                .Select(p => p.ParameterType))
+            var parameters = initializationServices.GetServices(startMethod.GetParameters()
+                .Select(p => p.ParameterType).Where(t => !t.IsAssignableTo(typeof(CancellationToken))))
                 .ToArray();
 
             if (startMethod.ReturnType.IsAssignableTo(typeof(Task)))
             {
-                await ((Task)startMethod.Invoke(plugin, parameters)!).ConfigureAwait(false);
+                await ((Task)startMethod.Invoke(pluginDescription.Instance, parameters)!).ConfigureAwait(false);
             }
             else
             {
-                startMethod.Invoke(plugin, parameters);
+                startMethod.Invoke(pluginDescription.Instance, parameters);
             }
         }
+
+        _loadedPlugins.Add(pluginDescription);
     }
 
-    public async Task InitializePluginsAsync(IServiceProvider initializationServices)
+    public async Task InitializePluginsAsync(IServiceProvider initializationServices, CancellationToken cancellationToken = default)
     {
-        foreach (var plugin in _plugins)
+        foreach (var pluginDescription in _plugins)
         {
-            await InitializePluginAsync(plugin, initializationServices).ConfigureAwait(false);
+            await InitializePluginAsync(pluginDescription, initializationServices, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -11,6 +11,12 @@
     <ProjectReference Include="..\..\..\src\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Hosting.csproj" />
     <ProjectReference Include="..\..\..\src\ReactiveFramework.WPF\ReactiveFramework.WPF.csproj" />
     <ProjectReference Include="..\WpfPlugin\WpfPlugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

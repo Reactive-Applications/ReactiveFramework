@@ -15,11 +15,12 @@ public class PluginDescription
 
     public Type PluginType { get; }
 
-    public Plugin? Instance { get; private set; }
+    public IPlugin? Instance { get; private set; }
 
-    [MemberNotNullWhen(true, nameof(Instance), nameof(Instance))]
+    [MemberNotNullWhen(true, nameof(Instance))]
     public bool IsRegistered { get; private set; }
 
+    [MemberNotNullWhen(true, nameof(Instance))]
     public bool IsInitialized { get; private set; }
 
     public PluginDescription(Type type)
@@ -35,11 +36,15 @@ public class PluginDescription
         return IsRegistered ? $"{PluginName} version: {PluginVersion}" : base.ToString();
     }
 
-    [MemberNotNull(nameof(PluginName), nameof(Instance), nameof(Instance))]
-    internal void InitializeDescriptor()
+    [MemberNotNull(nameof(PluginName), nameof(Instance))]
+    public void InitializeDescriptor()
     {
-        Instance = Activator.CreateInstance(PluginType) as Plugin ??
-            throw new NotSupportedException($"Can't create an instance of the {PluginType} plugin. Does the plugin provide an parameterless constructor?");
+        if (IsInitialized)
+        {
+            return;
+        }
+
+        Instance = Activator.CreateInstance(PluginType) as IPlugin;
 
         PluginVersion = Instance.GetVersion();
         PluginName = Instance.GetName();

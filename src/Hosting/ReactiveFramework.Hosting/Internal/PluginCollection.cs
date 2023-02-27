@@ -9,7 +9,7 @@ internal sealed class PluginCollection : IPluginCollection
 {
     private readonly HashSet<PluginDescription> _plugins = new();
 
-    public bool IsReadOnly { get; }
+    public bool IsReadOnly { get; private set; }
 
     public void Add<T>() where T : IPlugin, new()
     {
@@ -19,6 +19,11 @@ internal sealed class PluginCollection : IPluginCollection
 
     public void Add(Type pluginType)
     {
+        if (IsReadOnly)
+        {
+            throw new InvalidOperationException("Plugin collection can't be Modified");
+        }
+
         if (!pluginType.IsAssignableTo(typeof(IPlugin)))
         {
             throw new ArgumentException("pluginType must implement IPlugin");
@@ -29,11 +34,21 @@ internal sealed class PluginCollection : IPluginCollection
 
     public void Add(PluginDescription pluginDescription)
     {
+        if (IsReadOnly)
+        {
+            throw new InvalidOperationException("Plugin collection can't be Modified");
+        }
+
         _plugins.Add(pluginDescription);
     }
 
     public void AddFromDirectory(string directory)
     {
+        if (IsReadOnly)
+        {
+            throw new InvalidOperationException("Plugin collection can't be Modified");
+        }
+
         var innerDirectories = Directory.GetDirectories(directory);
 
         if (innerDirectories.Length == 0)
@@ -61,7 +76,7 @@ internal sealed class PluginCollection : IPluginCollection
 
     public void MakeReadOnly()
     {
-        throw new NotImplementedException();
+        IsReadOnly = true;
     }
 
     IEnumerator IEnumerable.GetEnumerator()
