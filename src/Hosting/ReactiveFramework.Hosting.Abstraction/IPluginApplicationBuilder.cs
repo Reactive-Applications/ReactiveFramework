@@ -12,7 +12,7 @@ public interface IPluginApplicationBuilder : IHostBuilder
 
     IServiceCollection InitializationServices { get; }
 
-    IServiceCollection RunTimeServices { get; }
+    IServiceCollection RuntimeServices { get; }
 
     ConfigurationManager Configuration { get; }
 

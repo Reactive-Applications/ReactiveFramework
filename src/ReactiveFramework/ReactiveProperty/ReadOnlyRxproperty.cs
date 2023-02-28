@@ -35,7 +35,7 @@ public class ReadOnlyRxProperty<T> : IReadOnlyRxProperty<T>, IObserver<T>
     {
         Value = initalValue;
         _comparer = equalityComparer ?? EqualityComparer<T>.Default;
-        _eventScheduler = eventScheduler ?? Schedulers.UiScheduler;
+        _eventScheduler = eventScheduler ?? Schedulers.MainScheduler;
         _sourceDisposable = Disposable.Empty;
         Settings = settings;
 

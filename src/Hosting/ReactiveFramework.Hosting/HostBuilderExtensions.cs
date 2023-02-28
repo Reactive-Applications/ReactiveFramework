@@ -114,7 +114,6 @@ public static class HostBuilderExtensions
         {
             logging.AddConsole();
         }
-
         logging.AddDebug();
         logging.AddEventSourceLogger();
 

@@ -12,17 +12,16 @@ public class PluginApplication : IPluginApplication
 {
     private readonly PluginHostBuilderContext _context;
     private readonly IServiceProvider _initializationServices;
-    
-    private IEnumerable<IHostedService> _hostedServices = Enumerable.Empty<IHostedService>();
-    private IHostLifetime _lifetime;
-    private ApplicationLifetime _applicationLifetime;
-    private IPluginManager _pluginManager;
-    
-    private bool _stopCalled;
     private ILogger<PluginApplication> _logger;
-    private IOptions<HostOptions> _options;
+
+    private IEnumerable<IHostedService> _hostedServices = Enumerable.Empty<IHostedService>();
+    private IHostLifetime? _lifetime;
+    private ApplicationLifetime? _applicationLifetime;
+
+    private bool _stopCalled;
 
     private IServiceProvider? _runTimeServices;
+    private List<IStartupService> _startupServices = new();
 
     private bool _initializing;
 
@@ -33,11 +32,15 @@ public class PluginApplication : IPluginApplication
 
     public IPluginCollection Plugins { get; }
 
+    public ILoggingBuilder RuntimeLogging { get; }
+
     internal PluginApplication(PluginHostBuilderContext context, IServiceProvider initializationServices)
     {
         _initializationServices = initializationServices;
         _context = context;
         Plugins = _initializationServices.GetRequiredService<IPluginCollection>();
+        RuntimeLogging = _initializationServices.GetRequiredService<ILoggingBuilder>();
+        _logger = _initializationServices.GetRequiredService<ILogger<PluginApplication>>();
     }
 
     public void Dispose()
@@ -46,36 +49,42 @@ public class PluginApplication : IPluginApplication
 
     public virtual async Task Initialize(CancellationToken cancellationToken = default)
     {
-        if(_initializing)
+        if (_initializing)
         {
             return;
         }
 
         _initializing = true;
 
-        _pluginManager = _initializationServices.GetRequiredService<IPluginManager>();
-        _initializationServices.GetRequiredService<ILoggingBuilder>();
-        
-        Plugins.MakeReadOnly();
+        _logger.LogDebug("Initializing app");
 
-        await _pluginManager.InitializePluginsAsync(_initializationServices, cancellationToken).ConfigureAwait(false);
+        var startupServices = _initializationServices.GetServices<IStartupService>();
+
+        foreach (var startupService in startupServices)
+        {
+            try
+            {
+                await startupService.OnAppInitiallization(_initializationServices, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Startupservice '{serviceName}' faild on app initialization", startupService.GetType().FullName);
+                continue;
+            }
+            _startupServices.Add(startupService);
+        }
 
         var buildServices = _initializationServices.GetRequiredService<Func<IServiceCollection, IServiceProvider>>();
-
         var runtimeServiceCollection = _initializationServices.GetRequiredService<IServiceCollection>();
-
-        runtimeServiceCollection.AddSingleton(_initializationServices.GetRequiredService<IHostEnvironment>());
-        runtimeServiceCollection.AddSingleton(_initializationServices.GetRequiredService<IHostApplicationLifetime>());
-        runtimeServiceCollection.AddSingleton(_initializationServices.GetRequiredService<IHostLifetime>());
-
         _runTimeServices = buildServices(runtimeServiceCollection);
 
         IsInitialized = true;
+        _logger.LogDebug("App initialized");
     }
 
     public virtual async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        if(_context.AutoInitialize && !IsInitialized)
+        if (_context.AutoInitialize && !IsInitialized)
         {
             await Initialize(cancellationToken).ConfigureAwait(false);
         }
@@ -88,40 +97,85 @@ public class PluginApplication : IPluginApplication
         _applicationLifetime = (ApplicationLifetime)Services.GetRequiredService<IHostApplicationLifetime>();
         _logger = Services.GetRequiredService<ILogger<PluginApplication>>();
 
-        _logger.LogDebug("Hosting staring");
+        _logger.LogDebug("Starting App");
 
         using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _applicationLifetime.ApplicationStopping);
         var token = combinedCancellationTokenSource.Token;
 
         await _lifetime.WaitForStartAsync(cancellationToken).ConfigureAwait(false);
 
-        await _pluginManager.StartPluginsAsync(Services);
         token.ThrowIfCancellationRequested();
 
         _hostedServices = Services.GetServices<IHostedService>();
+
+        foreach (var startupService in _startupServices)
+        {
+            try
+            {
+                await startupService.OnAppStart(Services, cancellationToken).ConfigureAwait(false); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Startupservice '{serviceName}' faild on app start", startupService.GetType().FullName);
+            }
+        }
 
         foreach (var hostedService in _hostedServices)
         {
             await hostedService.StartAsync(token).ConfigureAwait(false);
 
-            if(hostedService is BackgroundService backgroundService) 
+            if (hostedService is BackgroundService backgroundService)
             {
                 _ = TryExecuteBackgroundServiceAsync(backgroundService);
             }
         }
 
         _applicationLifetime.NotifyStarted();
-        _logger.LogDebug("Hosting started");
+        _logger.LogDebug("App started");
     }
 
-    public virtual Task StopAsync(CancellationToken cancellationToken = default)
+    public async virtual Task StopAsync(CancellationToken cancellationToken = default)
     {
         if (!IsInitialized)
         {
-            return Task.CompletedTask;
+            return;
         }
 
-        return Task.CompletedTask;
+        _logger.LogDebug("Application stopping");
+        _applicationLifetime!.StopApplication();
+
+        var exceptions = new List<Exception>();
+
+        foreach (var hostedService in _hostedServices)
+        {
+            try
+            {
+                await hostedService.StopAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                exceptions.Add(ex);
+            }
+        }
+        _applicationLifetime.NotifyStopped();
+
+        try
+        {
+            await _lifetime!.StopAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            exceptions.Add(ex);
+        }
+
+        if (exceptions.Count > 0)
+        {
+            var ex = new AggregateException("One or more hosted services failed to stop.", exceptions);
+            _logger.LogError(ex, "Application stopped with exceptions");
+            throw ex;
+        }
+
+        _logger.LogDebug("Application stopped");
     }
 
     public static IPluginApplicationBuilder CreateDefaultBuilder(string[]? args = null)
@@ -138,7 +192,7 @@ public class PluginApplication : IPluginApplication
     private async Task TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
     {
         // backgroundService.ExecuteTask may not be set (e.g. if the derived class doesn't call base.StartAsync)
-        Task? backgroundTask = backgroundService.ExecuteTask;
+        var backgroundTask = backgroundService.ExecuteTask;
         if (backgroundTask == null)
         {
             return;

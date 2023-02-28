@@ -66,7 +66,7 @@ public class RxProperty<T> : IRxProperty<T>
             RxPropertySettings settings = RxPropertySettings.Default,
             IEqualityComparer<T>? equalityComparer = null)
     {
-        EventScheduler = eventScheduler ?? Schedulers.UiScheduler;
+        EventScheduler = eventScheduler ?? Schedulers.MainScheduler;
         _value = initalValue;
         Settings = settings;
         _comparer = equalityComparer ?? EqualityComparer<T>.Default;

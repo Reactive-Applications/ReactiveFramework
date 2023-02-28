@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using ReactiveFramework.Hosting.Abstraction;
 using ReactiveFramework.Hosting.Abstraction.Plugins;
+using ReactiveFramework.Hosting.InitializationServices;
 using ReactiveFramework.Hosting.Internal;
 using System.Diagnostics;
 
@@ -24,7 +25,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
     public IPluginHostEnvironment Environment { get; }
     public IServiceCollection InitializationServices => _serviceCollection;
-    public IServiceCollection RunTimeServices => _runTimeServices;
+    public IServiceCollection RuntimeServices => _runTimeServices;
     public ConfigurationManager Configuration { get; }
     public ILoggingBuilder Logging { get; }
 
@@ -113,6 +114,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
         InitializationServices.TryAddSingleton<IServiceCollection, ServiceCollection>();
         InitializationServices.TryAddSingleton<IPluginManager, PluginManager>();
         InitializationServices.TryAddSingleton<IPluginCollection, PluginCollection>();
+
         InitializationServices.TryAddSingleton<ILoggingBuilder>(provider =>
         {
             var services = provider.GetRequiredService<IServiceCollection>();
@@ -123,6 +125,9 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
             return new LoggingBuilder(services);
         });
+
+        InitializationServices.AddStartupService<PluginInitializer>();
+        InitializationServices.AddStartupService<RuntimeServicesInitializer>();
     }
 
     public virtual IPluginApplication Build()
@@ -147,7 +152,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
         var runtimeServices = services.GetRequiredService<IServiceCollection>();
 
-        runtimeServices.Add(RunTimeServices);
+        runtimeServices.Add(RuntimeServices);
 
         return new PluginApplication(_context, services);
     }
@@ -177,7 +182,7 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
     public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
     {
-        configureDelegate(_context, RunTimeServices);
+        configureDelegate(_context, RuntimeServices);
         return this;
     }
 
