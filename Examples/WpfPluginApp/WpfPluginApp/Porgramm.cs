@@ -2,11 +2,14 @@
 using ReactiveFramework.Hosting;
 using ReactiveFramework.WPF.Hosting;
 using WpfPlugin;
+using WpfPluginApp;
 using WpfPluginApp.ViewModels;
 
 var builder = PluginApplication.CreateDefaultBuilder(args);
 
-builder.UseWPF().UseSplashWindow<SplashWindowViewModel>();
+builder
+    .UseWPF<App>()
+    .UseSplashWindow<SplashWindowViewModel>();
 
 var app = builder.Build();
 

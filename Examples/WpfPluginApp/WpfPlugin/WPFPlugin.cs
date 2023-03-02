@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using ReactiveFramework;
+﻿using ReactiveFramework;
 using ReactiveFramework.Hosting.Abstraction.Attributes;
-using ReactiveFramework.Hosting.Plugins;
 using ReactiveFramework.WPF.Plugins;
 using WpfPlugin.ViewModels;
 
