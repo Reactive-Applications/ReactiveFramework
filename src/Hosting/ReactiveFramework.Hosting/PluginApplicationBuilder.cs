@@ -153,6 +153,8 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
         var runtimeServices = services.GetRequiredService<IServiceCollection>();
 
+        runtimeServices.Add(RuntimeServices);
+
         return new PluginApplication(_context, services);
     }
 
