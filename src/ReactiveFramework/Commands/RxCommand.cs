@@ -68,7 +68,7 @@ public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>
             .Where(x => x.Demarcation == ExecutionDemarcation.Result)
             .Select(x => x.Result);
 
-        _canExecuteSubscribtion = _canExecute.ObserveOn(Schedulers.UiScheduler).Subscribe(b =>
+        _canExecuteSubscribtion = _canExecute.ObserveOn(Schedulers.MainScheduler).Subscribe(b =>
         {
             _canExecuteValue = b;
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
