@@ -85,7 +85,7 @@ internal sealed class PluginManager : IPluginManager
         foreach (var startMethod in pluginDescription.InitializeMethods)
         {
             var parameters = initializationServices.GetServices(startMethod.GetParameters()
-                .Select(p => p.ParameterType).Where(t => !t.IsAssignableTo(typeof(CancellationToken))))
+                .Select(p => p.ParameterType))
                 .ToArray();
 
             if (startMethod.ReturnType.IsAssignableTo(typeof(Task)))

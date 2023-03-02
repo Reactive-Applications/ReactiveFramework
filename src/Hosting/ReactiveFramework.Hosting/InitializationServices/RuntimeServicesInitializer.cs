@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReactiveFramework.Hosting.Abstraction;
 using ReactiveFramework.Hosting.Abstraction.Plugins;
@@ -13,6 +14,7 @@ internal class RuntimeServicesInitializer : IStartupService
         runtimeServices.AddSingleton(initializationServices.GetRequiredService<IHostApplicationLifetime>());
         runtimeServices.AddSingleton(initializationServices.GetRequiredService<IHostLifetime>());
         runtimeServices.AddSingleton(initializationServices.GetRequiredService<IPluginManager>());
+        runtimeServices.AddSingleton(initializationServices.GetRequiredService<IConfiguration>());
 
         return Task.CompletedTask;
     }

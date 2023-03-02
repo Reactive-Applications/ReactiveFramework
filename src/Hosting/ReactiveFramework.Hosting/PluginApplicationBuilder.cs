@@ -110,7 +110,8 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
 
     protected virtual void RegisterDefaultInitializationServices()
     {
-        InitializationServices.TryAddSingleton(Configuration);
+        InitializationServices.TryAddSingleton<IConfiguration>(Configuration);
+        InitializationServices.TryAddSingleton<IConfigurationBuilder>(Configuration);
         InitializationServices.TryAddSingleton<IServiceCollection, ServiceCollection>();
         InitializationServices.TryAddSingleton<IPluginManager, PluginManager>();
         InitializationServices.TryAddSingleton<IPluginCollection, PluginCollection>();
@@ -151,8 +152,6 @@ public class PluginApplicationBuilder : IPluginApplicationBuilder
         _serviceCollection.MakeReadOnly();
 
         var runtimeServices = services.GetRequiredService<IServiceCollection>();
-
-        runtimeServices.Add(RuntimeServices);
 
         return new PluginApplication(_context, services);
     }
