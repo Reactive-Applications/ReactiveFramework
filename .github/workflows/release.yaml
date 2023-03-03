@@ -3,11 +3,11 @@ on:
   push:
     branches:
       - release/v*.*
-      - preRelease/v*.*.*-*
+      - preRelease/v*.*.*
   pull_request:
     branches:
       - release/v*.*
-      - preRelease/v*.*.*-*
+      - preRelease/v*.*.*
 
 jobs:
   createRelease:
