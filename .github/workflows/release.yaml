@@ -22,7 +22,7 @@ jobs:
     - name: Install .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 7.0.201
       
     - name: Create nuget package
       run: .\.github\workflows\scripts\createNugetPackage.ps1 .
@@ -35,6 +35,7 @@ jobs:
          path: ./nugetPackages/
   
   publishPackage:
+    needs: createRelease
     runs-on: windows-latest
     
     if: github.event_name != 'pull_request'
