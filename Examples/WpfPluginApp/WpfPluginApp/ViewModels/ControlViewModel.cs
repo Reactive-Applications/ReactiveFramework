@@ -14,7 +14,8 @@ public class ControlViewModel : ViewModelBase
 
     public ControlViewModel(INavigationService navigationService)
     {
+        var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
-        NavigateToViewACommand = RxCommand.Create(() => navigationService.NavigateTo<ViewAViewModel>("PageViews"));
+        NavigateToViewACommand = RxCommand.Create(() => navigationService.NavigateTo("PageViews", viewAVm));
     }
 }
