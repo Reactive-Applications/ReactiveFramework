@@ -1,6 +1,8 @@
 $solution = $args[0]
 git fetch origin main:main
 
+Write-Output ${github.event_name}
+
 if ( $null -ne ${github.base_ref})
 {
     $branchName = ${github.base_ref}
