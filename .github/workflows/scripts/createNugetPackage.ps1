@@ -1,6 +1,17 @@
 $solution = $args[0]
 git fetch origin main:main
-$branchName = git symbolic-ref --short HEAD
+
+if ( $null -ne ${github.base_ref})
+{
+    $branchName = ${github.base_ref}
+}
+else
+{
+    $branchname = git symbolic-ref --short HEAD
+}
+
+Write-Output $branchName
+
 $branchInfos = $branchName.Split('/')
 $version = $branchInfos[1].Replace('v','').Split('.')
 if($version.length -ne 2 -and $branchInfos[0] -eq "release"){
@@ -11,12 +22,6 @@ if($version.length -ne 2 -and $branchInfos[0] -eq "release"){
     exit -1
 }elseif($branchInfos[0] -ne "release" -and $branchInfos[0] -ne "preRelease") {
     Write-Error 'branch is not a release branch'
-    exit -1
-}
-
-$commitId = git rev-parse HEAD
-if(git merge-base --is-ancestor $commitId HEAD){
-    Write-Error 'main branch does not contain last commit'
     exit -1
 }
 
