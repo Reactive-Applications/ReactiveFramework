@@ -7,6 +7,9 @@
 		<ImplicitUsings>true</ImplicitUsings>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<Authors>ReactiveApplications</Authors>
+		<RepositoryType>Git</RepositoryType>
+		<RepositoryUrl>https://github.com/Reactive-Applications/ReactiveFramework</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
