@@ -34,18 +34,18 @@ jobs:
          name: nugetPackages
          path: ./nugetPackages/
   
-  publishPackage:
+  publishPackages:
     needs: createRelease
     runs-on: windows-latest
     
     if: github.event_name != 'pull_request'
     steps:
     
-      - name: SavePackages
+      - name: LoadPackages
         uses: actions/download-artifact@v3
         with:
           name: nugetPackages
           path: ./nugetPackages/
 
       - name: publish nuget
-        run: dotnet nuget push "./nuget/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate
+        run: dotnet nuget push "**/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate
