@@ -34,7 +34,7 @@ jobs:
          name: nugetPackages
          path: ./nugetPackages/
   
-  publishPackage:
+  publishPackages:
     needs: createRelease
     runs-on: windows-latest
     
@@ -48,4 +48,4 @@ jobs:
           path: ./nugetPackages/
 
       - name: publish nuget
-        run: dotnet nuget push "./nuget/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate
+        run: dotnet nuget push "./nugetPackages/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate
