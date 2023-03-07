@@ -22,28 +22,30 @@ jobs:
     - name: Install .NET Core SDK
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 7.0.201
       
     - name: Create nuget package
       run: .\.github\workflows\scripts\createNugetPackage.ps1 .
+      shell: pwsh
 
     - name: SavePackages
-      uses: actions/upload-artifacts@v3
+      uses: actions/upload-artifact@v3
       with:
          name: nugetPackages
          path: ./nugetPackages/
   
-  publishPackage:
+  publishPackages:
+    needs: createRelease
     runs-on: windows-latest
     
     if: github.event_name != 'pull_request'
     steps:
     
-      - name: SavePackages
-        uses: actions/download-artifacts@v3
+      - name: LoadPackages
+        uses: actions/download-artifact@v3
         with:
           name: nugetPackages
           path: ./nugetPackages/
 
       - name: publish nuget
-        run: dotnet nuget push "./nuget/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate
+        run: dotnet nuget push "**/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate
