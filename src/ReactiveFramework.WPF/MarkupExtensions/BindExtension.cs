@@ -1,5 +1,4 @@
 ﻿using ReactiveFramework.WPF;
-using ReactiveFramework.ReactiveProperty;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using ReactiveFramework.RxProperty;
 
 namespace ReactiveFramework.WPF.MarkupExtensions;
 public class BindExtension : BindingExtensionBase

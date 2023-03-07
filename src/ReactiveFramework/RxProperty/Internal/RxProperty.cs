@@ -1,34 +1,24 @@
-﻿using ReactiveFramework;
+﻿using ReactiveFramework.Extensions;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
+using System.Security.Cryptography.X509Certificates;
 
-namespace ReactiveFramework.ReactiveProperty;
+namespace ReactiveFramework.RxProperty.Internal;
 public class RxProperty<T> : IRxProperty<T>
 {
-    private T _value = default;
+    private T _value;
     private List<IObserver<T>> _observers = new();
     private IEqualityComparer<T> _comparer;
     private IDisposable _sourceDisposable;
-
-    private bool RaiseLatestValueOnSubscribe => (Settings & RxPropertySettings.RaiseLatestValueOnSubscribe) == RxPropertySettings.RaiseLatestValueOnSubscribe;
-    private bool DistinctUntilChanged => (Settings & RxPropertySettings.DistinctUntilChanged) == RxPropertySettings.DistinctUntilChanged;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public T Value
     {
         get => _value;
-        set
-        {
-            if (DistinctUntilChanged && _comparer.Equals(_value, value))
-            {
-                return;
-            }
-
-            SetValue(value);
-        }
+        set => SetValue(value);
     }
     public bool IsDisposed { get; private set; }
 
@@ -43,7 +33,7 @@ public class RxProperty<T> : IRxProperty<T>
     T IReadOnlyRxProperty<T>.Value => Value;
 
     object? IReadOnlyRxProperty.Value => Value;
-    public RxPropertySettings Settings { get; }
+    public RxPropertyOptions Options { get; }
 
     public static implicit operator T(RxProperty<T> property)
         => property.Value;
@@ -54,30 +44,24 @@ public class RxProperty<T> : IRxProperty<T>
 
     }
 
-    public RxProperty(IScheduler? eventScheduler = null,
-            RxPropertySettings settings = RxPropertySettings.Default,
-            IEqualityComparer<T>? equalityComparer = null)
-        : this(default!, eventScheduler, settings, equalityComparer)
-    {
-    }
-
     public RxProperty(T initalValue,
             IScheduler? eventScheduler = null,
-            RxPropertySettings settings = RxPropertySettings.Default,
+            RxPropertyOptions? options = null,
             IEqualityComparer<T>? equalityComparer = null)
     {
         EventScheduler = eventScheduler ?? Schedulers.MainScheduler;
+        Options = options ?? RxPropertyOptions.Default;
+        
         _value = initalValue;
-        Settings = settings;
         _comparer = equalityComparer ?? EqualityComparer<T>.Default;
         _sourceDisposable = Disposable.Empty;
     }
 
     public RxProperty(IObservable<T> source, T initialValue,
             IScheduler? eventScheduler = null,
-            RxPropertySettings settings = RxPropertySettings.Default,
+            RxPropertyOptions? options = null,
             IEqualityComparer<T>? equalityComparer = null)
-        : this(initialValue, eventScheduler, settings, equalityComparer)
+        : this(initialValue, eventScheduler, options, equalityComparer)
     {
         _sourceDisposable = source.Subscribe(x => Value = x);
     }
@@ -86,12 +70,12 @@ public class RxProperty<T> : IRxProperty<T>
     {
         _observers.Add(observer);
 
-        if (RaiseLatestValueOnSubscribe)
+        if (Options.RaiseLatestValueOnSubscribe)
         {
             observer.OnNext(_value);
         }
 
-        return Disposable.Create(() => DisposeObserver(observer));
+        return Disposable.Create(() => Unsubscribe(observer));
     }
 
     public override string? ToString()
@@ -99,7 +83,7 @@ public class RxProperty<T> : IRxProperty<T>
         return Value?.ToString();
     }
 
-    public void ForceNotify()
+    public void NotifyChanged()
     {
         RaiseValueChanged(ref _value);
     }
@@ -130,19 +114,20 @@ public class RxProperty<T> : IRxProperty<T>
         IsDisposed = true;
     }
 
-    private void DisposeObserver(IObserver<T> observer)
+    private void Unsubscribe(IObserver<T> observer)
     {
         _observers.Remove(observer);
     }
 
-    private void SetValue(T value)
+    protected virtual void SetValue(T value)
     {
+        if (Options.DistinctUntilChanged && _comparer.Equals(_value, value) || IsDisposed)
+        {
+            return;
+        }
         _value = value;
 
-        if (!IsDisposed)
-        {
-            RaiseValueChanged(ref value);
-        }
+        RaiseValueChanged(ref _value);
 
     }
 
@@ -154,5 +139,61 @@ public class RxProperty<T> : IRxProperty<T>
         }
 
         EventScheduler.Schedule(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value))));
+    }
+}
+
+internal class RxProperty<T, TTransformed> : RxProperty<T>, IRxProperty<T, TTransformed>
+{
+    private TTransformed _tValue;
+
+    private readonly Func<T, TTransformed> _transformFunc;
+    private readonly Func<TTransformed, T> _transformBackFunc;
+
+    public RxProperty(
+        T initialValue,
+        Func<T, TTransformed> transformFunc,
+        Func<TTransformed, T> transformBackFunc,
+        IScheduler? eventScheduler = null,
+        RxPropertyOptions? options = null,
+        IEqualityComparer<T>? equalityComparer = null) 
+        : base(initialValue, eventScheduler, options, equalityComparer)
+    {
+        _transformFunc = transformFunc;
+        _transformBackFunc = transformBackFunc;
+        _tValue = _transformFunc(initialValue);
+    }
+
+    public RxProperty(
+        TTransformed initialValue,
+        Func<T, TTransformed> transformFunc,
+        Func<TTransformed, T> transformBackFunc,
+        IScheduler? eventScheduler = null,
+        RxPropertyOptions? options = null,
+        IEqualityComparer<T>? equalityComparer = null)
+        : base(transformBackFunc(initialValue), eventScheduler, options, equalityComparer)
+    {
+        _transformFunc = transformFunc;
+        _transformBackFunc = transformBackFunc;
+        _tValue = initialValue;
+    }
+
+
+
+    public TTransformed TransformedValue 
+    {
+        get => _tValue;
+        set => SetValue(_transformBackFunc(value));
+    }
+
+    public IDisposable Subscribe(IObserver<TTransformed> observer)
+    {
+        return this.Subscribe<T>(
+            v => 
+            {
+                _tValue = _transformFunc(v);
+                observer.OnNext(_tValue);
+            },
+            observer.OnError,
+            observer.OnCompleted);
     }
 }
