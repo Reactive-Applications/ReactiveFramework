@@ -12,7 +12,7 @@ public class WPFPlugin : UiPlugin
     public void InjectViews(IViewCompositionService viewCompositionService)
     {
         viewCompositionService.InsertView<ViewAViewModel>("PageViews");
-        viewCompositionService.InsertView<ViewBViewModel>("PageViews");
+        viewCompositionService.InsertView(typeof(ViewBViewModel),"PageViews");
     }
 
     [InvokedAtAppInitialization]
