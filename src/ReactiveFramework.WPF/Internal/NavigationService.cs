@@ -170,6 +170,25 @@ internal class NavigationService : INavigationService
         });
     }
 
+    public void NavigateTo(Type viewModelType, object containerKey)
+    {
+        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
+            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        {
+            throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
+        }
+
+        ViewContainer.ExecuteContainerAction(containerKey, container =>
+        {
+            var newView = ExecuteNavigation(containerKey, container, viewModelType);
+
+            if (newView.DataContext is INavigableViewModel paramVm)
+            {
+                paramVm.OnNavigatedTo();
+            }
+        });
+    }
+
     private FrameworkElement ExecuteNavigation(object containerKey, FrameworkElement container, Type viewModelType, IViewModel? viewModel = null)
     {
         if (!_viewAdapterForContainers.TryGetValue(containerKey, out var adapter))
