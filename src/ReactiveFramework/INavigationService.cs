@@ -12,6 +12,8 @@ public interface INavigationService
     void NavigateTo<TViewModel, TParameter>(object containerKey, TParameter parameter)
         where TViewModel : INavigableViewModel<TParameter>;
 
+    void NavigateTo(Type viewModelType, object containerKey);
+
     IObservable<bool> CanNavigateBack(object containerKey);
     IObservable<bool> CanNavigateForward(object containerKey);
 
