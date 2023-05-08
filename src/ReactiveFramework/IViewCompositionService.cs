@@ -4,6 +4,9 @@ public interface IViewCompositionService
     void InsertView<TViewModel>(object containerKey)
         where TViewModel : IViewModel;
 
+    void InsertView<TViewModel>(TViewModel viewModel, object containerKey)
+        where TViewModel : IViewModel;
+
     void InsertView(Type viewMdoel, object containerKey);
 
     void RemoveView<TViewModel>(object containerKey)

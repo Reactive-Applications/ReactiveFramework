@@ -36,6 +36,22 @@ internal class ViewCompositionService : IViewCompositionService
         });
     }
 
+    public void InsertView<TViewModel>(TViewModel viewModel, object containerKey) where TViewModel : IViewModel
+    {
+        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
+           .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        {
+            throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
+        }
+
+        ViewContainer.ExecuteContainerAction(containerKey, container =>
+        {
+            var adapter = _viewAdapters.GetAdapterFor(container.GetType());
+            var view = _viewProvider.GetViewWithViewModel(viewModel);
+            adapter.Insert(container, view);
+        });
+    }
+
     public void RemoveView<TViewModel>(object containerKey) where TViewModel : IViewModel
     {
         RemoveView(typeof(TViewModel), containerKey);
