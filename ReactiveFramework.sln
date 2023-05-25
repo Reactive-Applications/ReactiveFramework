@@ -25,11 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfPluginApp", "Examples\Wp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfPlugin", "Examples\WpfPluginApp\WpfPlugin\WpfPlugin.csproj", "{66E98156-4FD1-4B73-BD10-A8CF3647D24A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosting", "Hosting", "{AD5D104E-0546-4B10-98E7-CC6F5AC644D9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modularity", "Modularity", "{AD5D104E-0546-4B10-98E7-CC6F5AC644D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveFramework.Hosting.Abstraction", "src\Hosting\ReactiveFramework.Hosting.Abstraction\ReactiveFramework.Hosting.Abstraction.csproj", "{E9D1C96D-2180-4DDF-A3F6-37C6675D068F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveFramework.Modularity.Abstraction", "src\Hosting\ReactiveFramework.Hosting.Abstraction\ReactiveFramework.Modularity.Abstraction.csproj", "{E9D1C96D-2180-4DDF-A3F6-37C6675D068F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveFramework.Hosting", "src\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Hosting.csproj", "{B8C3ACD4-C6F6-4DC9-BD71-3B0639D95665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveFramework.Modularity", "src\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Modularity.csproj", "{B8C3ACD4-C6F6-4DC9-BD71-3B0639D95665}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

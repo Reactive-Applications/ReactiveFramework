@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ReactiveFramework.Hosting.Abstraction;
+using ReactiveFramework.Modularity.Abstraction;
 using ReactiveFramework.WPF.ViewAdapters;
 using ReactiveFramework.WPF.ViewComposition;
 using System;
@@ -16,7 +16,7 @@ public class WPFAppInitializer : IStartupService
     private Window? _splashWindow;
     private ISplashWindowViewModel? _splashViewModel;
 
-    public async Task OnAppInitiallization(IServiceProvider initializationServices, CancellationToken cancellationToken = default)
+    public async Task OnAppInitialization(IServiceProvider initializationServices, CancellationToken cancellationToken = default)
     {
         var runtimeServices = initializationServices.GetRequiredService<IServiceCollection>();
         runtimeServices.AddSingleton(initializationServices.GetRequiredService<IViewCollection>());

@@ -1,7 +1,7 @@
-﻿namespace ReactiveFramework.Hosting.Abstraction;
+﻿namespace ReactiveFramework.Modularity.Abstraction;
 public interface IStartupService
 {
-    Task OnAppInitiallization(IServiceProvider initializationServices, CancellationToken cancellationToken = default);
+    Task OnAppInitialization(IServiceProvider initializationServices, CancellationToken cancellationToken = default);
 
     Task OnAppStart(IServiceProvider runtimeServices, CancellationToken cancellationToken = default);
 }

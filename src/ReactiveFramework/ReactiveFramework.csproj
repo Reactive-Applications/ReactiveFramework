@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Hosting.csproj" />
+	  <ProjectReference Include="..\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Modularity.csproj" />
 	</ItemGroup>
 
 </Project>
