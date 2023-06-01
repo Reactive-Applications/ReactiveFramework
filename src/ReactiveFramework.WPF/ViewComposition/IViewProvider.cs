@@ -6,5 +6,9 @@ public interface IViewProvider
 {
     IReadOnlyViewCollection ViewCollection { get; }
     FrameworkElement GetViewWithViewModel(ViewDescriptor viewDescriptor);
+
+    FrameworkElement GetViewWithViewModel(IViewModel viewModel);
+
     FrameworkElement GetView(ViewDescriptor viewDescriptor);
+
 }
