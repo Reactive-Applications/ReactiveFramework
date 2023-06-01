@@ -24,6 +24,15 @@ internal class ViewProvider : IViewProvider
         return view;
     }
 
+    public FrameworkElement GetViewWithViewModel(IViewModel viewModel)
+    {
+        var descriptor = _viewCollection.GetDescriptorForViewModel(viewModel.GetType());
+
+        var view = GetView(descriptor);
+        view.DataContext = viewModel;
+        return view;
+    }
+
     public FrameworkElement GetView(ViewDescriptor viewDescriptor)
     {
         FrameworkElement view = (FrameworkElement)_serviceProvider.GetUnregisteredService(viewDescriptor.ViewType);
