@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace ReactiveFramework.WPF.Hosting;
-public class WPFLifetime : IHostLifetime
+public class WpfLifetime : IHostLifetime
 {
-    private readonly IWPFThread _thread;
+    private readonly IWpfThread _thread;
 
-    public WPFLifetime(IWPFThread wpfThread)
+    public WpfLifetime(IWpfThread wpfThread)
     {
         _thread = wpfThread;
     }
@@ -15,8 +16,8 @@ public class WPFLifetime : IHostLifetime
         return Task.CompletedTask;
     }
 
-    public async Task WaitForStartAsync(CancellationToken cancellationToken)
+    public Task WaitForStartAsync(CancellationToken cancellationToken)
     {
-        await _thread.WaitForAppStart();
+        return Task.CompletedTask;
     }
 }

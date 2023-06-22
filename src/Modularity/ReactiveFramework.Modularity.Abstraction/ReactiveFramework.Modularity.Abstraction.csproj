@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -14,14 +14,10 @@
 	<ItemGroup>
 		<None Include="./../../../README.md" Pack="true" PackagePath="\" />
 		<None Include="./../../../LICENSE" Pack="true" PackagePath="\" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-		
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-		<PackageReference Include="System.Reactive" Version="5.0.0" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
-		<ProjectReference Include="..\ReactiveFramework.Hosting.Abstraction\ReactiveFramework.Modularity.Abstraction.csproj" />
+	  <ProjectReference Include="..\..\Hosting\ReactiveFramework.Hosting.Abstraction\ReactiveFramework.Hosting.Abstraction.csproj" />
 	</ItemGroup>
 
 </Project>

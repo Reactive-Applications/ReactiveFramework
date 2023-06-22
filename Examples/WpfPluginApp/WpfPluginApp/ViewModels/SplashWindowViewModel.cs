@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WpfPluginApp.Views;
 
 namespace WpfPluginApp.ViewModels;
@@ -11,12 +12,14 @@ public class SplashWindowViewModel : ViewModelBase, ISplashWindowViewModel
 {
     public Type WindowType => typeof(SplashWindow);
 
-    public Task OnInitalizationAsync()
+    public Window? SplashWindow { get; set; }
+
+    public async Task AfterModuleInitalizationAsync()
     {
-        return Task.Delay(5000);
+        await Task.Delay(3000);
     }
 
-    public Task OnAppStartAsync(IServiceProvider runtimeServices)
+    public Task OnAppStartAsync()
     {
         return Task.CompletedTask;
     }

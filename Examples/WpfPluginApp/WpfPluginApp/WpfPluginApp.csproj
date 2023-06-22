@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\src\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Modularity.csproj" />
+		<ProjectReference Include="..\..\..\src\Hosting\ReactiveFramework.Hosting\ReactiveFramework.Hosting.csproj" />
 		<ProjectReference Include="..\..\..\src\ReactiveFramework.WPF\ReactiveFramework.WPF.csproj" />
 		<ProjectReference Include="..\WpfPlugin\WpfPlugin.csproj" />
 	</ItemGroup>

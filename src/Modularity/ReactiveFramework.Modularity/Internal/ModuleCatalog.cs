@@ -9,7 +9,7 @@ internal sealed class ModuleCatalog : IModuleCatalog, IReadonlyModuleCatalog
     public bool IsReadOnly => false;
     public int Count => _modules.Count;
 
-    public void Add<T>() where T : IModule, new()
+    public T Add<T>() where T : IModule, new()
     {
         if (IsReadOnly)
         {
@@ -17,10 +17,12 @@ internal sealed class ModuleCatalog : IModuleCatalog, IReadonlyModuleCatalog
         }
 
         var type = typeof(T);
-        _modules.Add(new T());
+        var module = new T();
+        _modules.Add(module);
+        return module;
     }
 
-    public void Add(Type moduleType)
+    public IModule Add(Type moduleType)
     {
         if (IsReadOnly)
         {
@@ -34,6 +36,7 @@ internal sealed class ModuleCatalog : IModuleCatalog, IReadonlyModuleCatalog
 
         var module = Activator.CreateInstance(moduleType) as IModule ?? throw new InvalidOperationException($"can't create module of type {moduleType.FullName}");
         _modules.Add(module);
+        return module;
     }
 
     public void Add(IModule module)

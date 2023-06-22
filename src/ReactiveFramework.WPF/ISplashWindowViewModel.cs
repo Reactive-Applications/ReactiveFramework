@@ -1,7 +1,10 @@
-﻿namespace ReactiveFramework.WPF;
+﻿using System.Windows;
+
+namespace ReactiveFramework.WPF;
 public interface ISplashWindowViewModel : IViewModel
 {
     Type WindowType { get; }
-    Task OnInitalizationAsync();
-    Task OnAppStartAsync(IServiceProvider runtimeServices);
+    Window? SplashWindow { get; set; }
+    Task OnAppStartAsync();
+    Task AfterModuleInitalizationAsync();
 }
