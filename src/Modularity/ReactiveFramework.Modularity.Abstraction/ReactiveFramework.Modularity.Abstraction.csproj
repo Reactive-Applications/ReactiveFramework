@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -12,11 +12,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="./../../README.md" Pack="true" PackagePath="\" />
-		<None Include="./../../LICENSE" Pack="true" PackagePath="\" />
-		
-		<PackageReference Include="DynamicData" Version="7.13.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-preview.5.23280.8" />
+		<None Include="./../../../README.md" Pack="true" PackagePath="\" />
+		<None Include="./../../../LICENSE" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Hosting\ReactiveFramework.Hosting.Abstraction\ReactiveFramework.Hosting.Abstraction.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,20 +1,19 @@
 ﻿using Microsoft.Extensions.Hosting;
 using ReactiveFramework.Hosting;
+using ReactiveFramework.Modularity.Extensions;
 using ReactiveFramework.WPF.Hosting;
 using WpfPlugin;
 using WpfPluginApp;
 using WpfPluginApp.ViewModels;
+using WpfPluginApp.Views;
 
-var builder = PluginApplication.CreateDefaultBuilder(args);
+var builder = RxHost.CreateDefaultBuilder(args);
 
-builder
-    .UseWPF<App>()
-    .UseSplashWindow<SplashWindowViewModel>();
+builder.ConfigureWpfApp<App>();
+builder.UseSplashWindow<SplashWindowViewModel>();
+
+
+await builder.RegisterModuleAsync<WPFModule>(default);
 
 var app = builder.Build();
-
-app.Plugins.Add<WPFPlugin>();
-
-await app.Initialize();
-
 await app.RunAsync();

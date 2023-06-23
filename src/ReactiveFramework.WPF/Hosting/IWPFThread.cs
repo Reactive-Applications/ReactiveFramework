@@ -3,20 +3,21 @@ using System.Windows;
 using System.Windows.Threading;
 
 namespace ReactiveFramework.WPF.Hosting;
-public interface IWPFThread
+public interface IWpfThread
 {
     bool AppIsRunnning { get; }
 
     [MemberNotNullWhen(true, nameof(Application))]
+    [MemberNotNullWhen(true, nameof(UiDispatcher))]
     bool AppCreated { get; }
 
     Thread Thread { get; }
     Application? Application { get; }
-    Dispatcher UiDispatcher { get; }
+    Dispatcher? UiDispatcher { get; }
 
 
-    void StartApplication();
-    void StopApplication();
-    Task WaitForAppBuild();
+    Task StartAsync(CancellationToken cancellation);
+    Task StopAsync(CancellationToken cancellation);
+
     Task WaitForAppStart();
 }

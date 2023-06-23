@@ -1,27 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<Authors>ReactiveApplications</Authors>
-		<RepositoryType>Git</RepositoryType>
-		<RepositoryUrl>https://github.com/Reactive-Applications/ReactiveFramework</RepositoryUrl>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="./../../../README.md" Pack="true" PackagePath="\" />
-		<None Include="./../../../LICENSE" Pack="true" PackagePath="\" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-preview.5.23280.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0-preview.5.23280.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0-preview.5.23280.8" />
+  </ItemGroup>
 
 </Project>
